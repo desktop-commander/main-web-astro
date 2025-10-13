@@ -1,0 +1,870 @@
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Check, Download, Copy, ChevronDown, ChevronRight, ExternalLink } from "lucide-react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useState, useEffect, useRef } from "react";
+import { useAnalytics } from "@/hooks/useAnalyticsAstro";
+
+const requirements = [
+  {
+    text: "Node.js version >= v18.0.0",
+    downloadUrl: "https://nodejs.org/en/download"
+  },
+  {
+    text: "Claude Desktop",
+    downloadUrl: "https://claude.ai/download"
+  }
+];
+
+const installationOptions = [
+  {
+    platform: ["MacOS"],
+    method: "Bash Install",
+    description: "Run this in Terminal:",
+    command: "curl -fsSL https://raw.githubusercontent.com/wonderwhy-er/DesktopCommanderMCP/refs/heads/main/install.sh | bash",
+    available: true,
+    buttonText: "Copy and run this in Terminal"
+  },
+  {
+    platform: ["Windows", "MacOS"],
+    method: "NPX Install",
+    description: "Run this in Terminal/Command Prompt:",
+    command: "npx @wonderwhy-er/desktop-commander@latest setup",
+    available: true,
+    buttonText: "Copy and run this in Command Center / Terminal"
+  }
+];
+
+const moreInstallationOptions = [
+  { 
+    name: "Install via Smithery", 
+    description: "Install through Smithery",
+    content: (
+      <div className="space-y-4">
+        <p className="text-muted-foreground">
+          Install via the Smithery web interface:
+        </p>
+        <div className="space-y-3">
+          <div className="flex items-start gap-3">
+            <span className="flex-shrink-0 w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center text-xs font-bold text-primary">1</span>
+            <div>
+              <strong className="text-foreground">Visit the Smithery page:</strong>
+              <div className="mt-1">
+                <a 
+                  href="https://smithery.ai/server/@wonderwhy-er/desktop-commander" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline break-all"
+                >
+                  https://smithery.ai/server/@wonderwhy-er/desktop-commander
+                </a>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <span className="flex-shrink-0 w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center text-xs font-bold text-primary">2</span>
+            <div>
+              <strong className="text-foreground">Login to Smithery</strong> if you haven't already
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <span className="flex-shrink-0 w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center text-xs font-bold text-primary">3</span>
+            <div>
+              <strong className="text-foreground">Select your client</strong> (Claude Desktop) on the right side
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <span className="flex-shrink-0 w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center text-xs font-bold text-primary">4</span>
+            <div>
+              <strong className="text-foreground">Install with the provided key</strong> that appears after selecting your client
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <span className="flex-shrink-0 w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center text-xs font-bold text-primary">5</span>
+            <div>
+              <strong className="text-foreground">Restart Claude Desktop</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  },
+  { 
+    name: "Install in Cursor", 
+    description: "Setup in Cursor IDE",
+    content: (
+      <div className="space-y-4">
+        <p className="text-muted-foreground">
+          Install Desktop Commander in Cursor with one click:
+        </p>
+        <div className="space-y-3">
+          <div className="flex items-start gap-3">
+            <span className="flex-shrink-0 w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center text-xs font-bold text-primary">1</span>
+            <div className="flex-1">
+              <strong className="text-foreground">Click the installation link:</strong>
+              <div className="mt-2">
+                <a 
+                  href="cursor://anysphere.cursor-deeplink/mcp/install?name=desktop-commander&config=eyJjb21tYW5kIjoibnB4IC15IEB3b25kZXJ3aHktZXIvZGVza3RvcC1jb21tYW5kZXJAbGF0ZXN0In0%3D" 
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium"
+                >
+                  Install in Cursor
+                  <ArrowRight className="h-4 w-4" />
+                </a>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <span className="flex-shrink-0 w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center text-xs font-bold text-primary">2</span>
+            <div>
+              <strong className="text-foreground">Allow Cursor to open</strong> when prompted by your browser
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <span className="flex-shrink-0 w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center text-xs font-bold text-primary">3</span>
+            <div>
+              <strong className="text-foreground">Confirm installation</strong> in Cursor when the dialog appears
+            </div>
+          </div>
+        </div>
+        <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
+          <p className="text-sm text-blue-400">
+            <strong>Note:</strong> Make sure you have Cursor IDE installed before clicking the installation link.
+          </p>
+        </div>
+      </div>
+    )
+  },
+  { 
+    name: "Install using Docker", 
+    description: "Deploy using Docker containers",
+    content: (
+      <div className="space-y-6">
+        <div>
+          <h3 className="text-lg font-semibold text-foreground mb-2 flex items-center gap-2">
+            🐳 Docker Installation
+          </h3>
+          <p className="text-muted-foreground mb-2">
+            <strong className="text-foreground">Perfect for complete isolation and no Node.js required!</strong>
+          </p>
+          <p className="text-sm text-muted-foreground">
+            Desktop Commander runs in a sandboxed Docker container with persistent development environment.
+          </p>
+        </div>
+
+        <div>
+          <h4 className="font-semibold text-foreground mb-2">Prerequisites</h4>
+          <ul className="text-sm text-muted-foreground space-y-1">
+            <li>• Docker Desktop installed <strong>and running</strong></li>
+            <li>• Claude Desktop app installed</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="font-semibold text-foreground mb-3">Automated Installation (Recommended)</h4>
+          <div className="space-y-3">
+            <div>
+              <p className="text-sm font-medium text-foreground mb-2">macOS/Linux:</p>
+              <div className="bg-background border border-dc-border rounded-lg p-3 font-mono text-sm relative">
+                <code className="text-primary break-all pr-8 block">bash &lt;(curl -fsSL https://raw.githubusercontent.com/wonderwhy-er/DesktopCommanderMCP/refs/heads/main/install-docker.sh)</code>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute top-2 right-2 h-5 w-5 p-0 hover:bg-muted"
+                  onClick={() => {
+                    navigator.clipboard.writeText("bash <(curl -fsSL https://raw.githubusercontent.com/wonderwhy-er/DesktopCommanderMCP/refs/heads/main/install-docker.sh)");
+                    trackCustomEvent('copy_command_clicked', {
+                      button_text: 'Copy',
+                      button_location: 'docker_install_macos',
+                      installation_method: 'Docker',
+                      command: 'bash <(curl -fsSL https://raw.githubusercontent.com/wonderwhy-er/DesktopCommanderMCP/refs/heads/main/install-docker.sh)'
+                    });
+                  }}
+                >
+                  <Copy className="h-3 w-3" />
+                </Button>
+              </div>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-foreground mb-2">Windows PowerShell:</p>
+              <div className="bg-background border border-dc-border rounded-lg p-3 font-mono text-sm relative">
+                <code className="text-primary break-all pr-8 block">iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/wonderwhy-er/DesktopCommanderMCP/refs/heads/main/install-docker.ps1'))</code>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute top-2 right-2 h-5 w-5 p-0 hover:bg-muted"
+                  onClick={() => {
+                    navigator.clipboard.writeText("iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/wonderwhy-er/DesktopCommanderMCP/refs/heads/main/install-docker.ps1'))");
+                    trackCustomEvent('copy_command_clicked', {
+                      button_text: 'Copy',
+                      button_location: 'docker_install_windows',
+                      installation_method: 'Docker',
+                      command: 'PowerShell Docker Install'
+                    });
+                  }}
+                >
+                  <Copy className="h-3 w-3" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h4 className="font-semibold text-foreground mb-2">How Docker Persistence Works</h4>
+          <p className="text-sm text-muted-foreground mb-3">
+            Desktop Commander creates a persistent work environment that remembers everything between sessions:
+          </p>
+          <ul className="text-sm text-muted-foreground space-y-1">
+            <li>• <strong className="text-foreground">Your development tools:</strong> Any software you install stays installed</li>
+            <li>• <strong className="text-foreground">Your configurations:</strong> Git settings, SSH keys, shell preferences preserved</li>
+            <li>• <strong className="text-foreground">Your work files:</strong> Projects and files in workspace persist across restarts</li>
+            <li>• <strong className="text-foreground">Package caches:</strong> Downloaded packages cached for faster installs</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="font-semibold text-foreground mb-3">Manual Docker Configuration</h4>
+          <p className="text-sm text-muted-foreground mb-3">
+            If you prefer manual setup, add this to your claude_desktop_config.json:
+          </p>
+          <div className="space-y-3">
+            <div>
+              <p className="text-sm font-medium text-foreground mb-2">Basic setup (no file access):</p>
+              <div className="bg-background border border-dc-border rounded-lg p-3 font-mono text-xs relative overflow-x-auto">
+                <code className="text-primary whitespace-pre pr-8 block">{`{
+  "mcpServers": {
+    "desktop-commander-docker": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm",
+        "mcp/desktop-commander:latest"
+      ]
+    }
+  }
+}`}</code>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute top-2 right-2 h-5 w-5 p-0 hover:bg-muted"
+                  onClick={() => {
+                    navigator.clipboard.writeText(`{
+  "mcpServers": {
+    "desktop-commander-docker": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm",
+        "mcp/desktop-commander:latest"
+      ]
+    }
+  }
+}`);
+                    trackCustomEvent('copy_command_clicked', {
+                      button_text: 'Copy',
+                      button_location: 'docker_config_basic',
+                      installation_method: 'Docker Manual',
+                      command: 'Docker basic config'
+                    });
+                  }}
+                >
+                  <Copy className="h-3 w-3" />
+                </Button>
+              </div>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-foreground mb-2">With folder mounting:</p>
+              <div className="bg-background border border-dc-border rounded-lg p-3 font-mono text-xs relative overflow-x-auto">
+                <code className="text-primary whitespace-pre pr-8 block">{`{
+  "mcpServers": {
+    "desktop-commander-docker": {
+      "command": "docker", 
+      "args": [
+        "run", "-i", "--rm",
+        "-v", "dc-system:/usr",
+        "-v", "dc-home:/root", 
+        "-v", "dc-workspace:/workspace",
+        "-v", "dc-packages:/var",
+        "-v", "/Users/username/Projects:/home/Projects",
+        "mcp/desktop-commander:latest"
+      ]
+    }
+  }
+}`}</code>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute top-2 right-2 h-5 w-5 p-0 hover:bg-muted"
+                  onClick={() => {
+                    navigator.clipboard.writeText(`{
+  "mcpServers": {
+    "desktop-commander-docker": {
+      "command": "docker", 
+      "args": [
+        "run", "-i", "--rm",
+        "-v", "dc-system:/usr",
+        "-v", "dc-home:/root", 
+        "-v", "dc-workspace:/workspace",
+        "-v", "dc-packages:/var",
+        "-v", "/Users/username/Projects:/home/Projects",
+        "mcp/desktop-commander:latest"
+      ]
+    }
+  }
+}`);
+                    trackCustomEvent('copy_command_clicked', {
+                      button_text: 'Copy',
+                      button_location: 'docker_config_advanced',
+                      installation_method: 'Docker Manual',
+                      command: 'Docker advanced config'
+                    });
+                  }}
+                >
+                  <Copy className="h-3 w-3" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h4 className="font-semibold text-foreground mb-2">Docker Benefits</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+            <div className="text-green-400">✅ Complete Isolation: Runs in sandboxed environment</div>
+            <div className="text-green-400">✅ No Node.js Required: Everything included in container</div>
+            <div className="text-green-400">✅ Cross-Platform: Same experience on all operating systems</div>
+            <div className="text-green-400">✅ Persistent Environment: Your tools and files survive restarts</div>
+          </div>
+        </div>
+
+        <div>
+          <h4 className="font-semibold text-foreground mb-3">Management Commands</h4>
+          <div className="space-y-3">
+            <div>
+              <p className="text-sm font-medium text-foreground mb-2">macOS/Linux:</p>
+              <div className="space-y-2">
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1"># Check status</p>
+                  <div className="bg-background border border-dc-border rounded-lg p-2 font-mono text-xs relative">
+                    <code className="text-primary break-all pr-8 block">bash &lt;(curl -fsSL https://raw.githubusercontent.com/wonderwhy-er/DesktopCommanderMCP/refs/heads/main/install-docker.sh) --status</code>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="absolute top-1 right-1 h-4 w-4 p-0 hover:bg-muted"
+                      onClick={() => {
+                        navigator.clipboard.writeText("bash <(curl -fsSL https://raw.githubusercontent.com/wonderwhy-er/DesktopCommanderMCP/refs/heads/main/install-docker.sh) --status");
+                        trackCustomEvent('copy_command_clicked', {
+                          button_text: 'Copy',
+                          button_location: 'docker_status_macos',
+                          installation_method: 'Docker Management',
+                          command: 'Docker status check'
+                        });
+                      }}
+                    >
+                      <Copy className="h-2 w-2" />
+                    </Button>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1"># Reset persistent data</p>
+                  <div className="bg-background border border-dc-border rounded-lg p-2 font-mono text-xs relative">
+                    <code className="text-primary break-all pr-8 block">bash &lt;(curl -fsSL https://raw.githubusercontent.com/wonderwhy-er/DesktopCommanderMCP/refs/heads/main/install-docker.sh) --reset</code>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="absolute top-1 right-1 h-4 w-4 p-0 hover:bg-muted"
+                      onClick={() => {
+                        navigator.clipboard.writeText("bash <(curl -fsSL https://raw.githubusercontent.com/wonderwhy-er/DesktopCommanderMCP/refs/heads/main/install-docker.sh) --reset");
+                        trackCustomEvent('copy_command_clicked', {
+                          button_text: 'Copy',
+                          button_location: 'docker_reset_macos',
+                          installation_method: 'Docker Management',
+                          command: 'Docker reset'
+                        });
+                      }}
+                    >
+                      <Copy className="h-2 w-2" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-foreground mb-2">Windows PowerShell:</p>
+              <div className="space-y-2">
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1"># Check status</p>
+                  <div className="bg-background border border-dc-border rounded-lg p-2 font-mono text-xs relative">
+                    <code className="text-primary break-all pr-8 block">$script = (New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/wonderwhy-er/DesktopCommanderMCP/refs/heads/main/install-docker.ps1'); & ([ScriptBlock]::Create("$script")) -Status</code>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="absolute top-1 right-1 h-4 w-4 p-0 hover:bg-muted"
+                      onClick={() => {
+                        navigator.clipboard.writeText("$script = (New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/wonderwhy-er/DesktopCommanderMCP/refs/heads/main/install-docker.ps1'); & ([ScriptBlock]::Create(\"$script\")) -Status");
+                        trackCustomEvent('copy_command_clicked', {
+                          button_text: 'Copy',
+                          button_location: 'docker_status_windows',
+                          installation_method: 'Docker Management',
+                          command: 'Docker status check PowerShell'
+                        });
+                      }}
+                    >
+                      <Copy className="h-2 w-2" />
+                    </Button>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1"># Reset data</p>
+                  <div className="bg-background border border-dc-border rounded-lg p-2 font-mono text-xs relative">
+                    <code className="text-primary break-all pr-8 block">$script = (New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/wonderwhy-er/DesktopCommanderMCP/refs/heads/main/install-docker.ps1'); & ([ScriptBlock]::Create("$script")) -Reset</code>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="absolute top-1 right-1 h-4 w-4 p-0 hover:bg-muted"
+                      onClick={() => {
+                        navigator.clipboard.writeText("$script = (New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/wonderwhy-er/DesktopCommanderMCP/refs/heads/main/install-docker.ps1'); & ([ScriptBlock]::Create(\"$script\")) -Reset");
+                        trackCustomEvent('copy_command_clicked', {
+                          button_text: 'Copy',
+                          button_location: 'docker_reset_windows',
+                          installation_method: 'Docker Management',
+                          command: 'Docker reset PowerShell'
+                        });
+                      }}
+                    >
+                      <Copy className="h-2 w-2" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
+          <p className="text-sm text-blue-400">
+            <strong>Note:</strong> Docker installation provides complete isolation and doesn't require Node.js on your system. Perfect for users who want a clean, sandboxed development environment.
+          </p>
+        </div>
+      </div>
+    )
+  },
+  { 
+    name: "Install manually", 
+    description: "Manual installation guide",
+    content: (
+      <div className="space-y-4">
+        <p className="text-muted-foreground">
+          Add this to your claude_desktop_config.json:
+        </p>
+        <div className="bg-background border border-dc-border rounded-lg p-3 font-mono text-sm relative overflow-x-auto">
+          <code className="text-primary whitespace-pre pr-8 block">{`{
+  "mcpServers": {
+    "desktop-commander": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@wonderwhy-er/desktop-commander@latest"
+      ]
+    }
+  }
+}`}</code>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="absolute top-2 right-2 h-5 w-5 p-0 hover:bg-muted"
+            onClick={() => {
+              navigator.clipboard.writeText(`{
+  "mcpServers": {
+    "desktop-commander": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@wonderwhy-er/desktop-commander@latest"
+      ]
+    }
+  }
+}`);
+              trackCustomEvent('copy_command_clicked', {
+                button_text: 'Copy',
+                button_location: 'manual_install',
+                installation_method: 'Manual Install',
+                command: 'Manual config'
+              });
+            }}
+          >
+            <Copy className="h-3 w-3" />
+          </Button>
+        </div>
+        <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
+          <p className="text-sm text-blue-400">
+            <strong>Note:</strong> Make sure to restart Claude Desktop after adding this configuration to your claude_desktop_config.json file.
+          </p>
+        </div>
+      </div>
+    )
+  },
+  { 
+    name: "Install locally", 
+    description: "Local development setup",
+    content: (
+      <div className="space-y-4">
+        <p className="text-muted-foreground">
+          Clone and build locally:
+        </p>
+        <div className="bg-background border border-dc-border rounded-lg p-3 font-mono text-sm relative overflow-x-auto">
+          <code className="text-primary whitespace-pre pr-8 block">{`git clone https://github.com/wonderwhy-er/DesktopCommanderMCP
+cd DesktopCommanderMCP
+npm run setup`}</code>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="absolute top-2 right-2 h-5 w-5 p-0 hover:bg-muted"
+            onClick={() => {
+              navigator.clipboard.writeText(`git clone https://github.com/wonderwhy-er/DesktopCommanderMCP
+cd DesktopCommanderMCP
+npm run setup`);
+              trackCustomEvent('copy_command_clicked', {
+                button_text: 'Copy',
+                button_location: 'local_development',
+                installation_method: 'Local Development',
+                command: 'Git clone and setup'
+              });
+            }}
+          >
+            <Copy className="h-3 w-3" />
+          </Button>
+        </div>
+        <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
+          <p className="text-sm text-green-400">
+            <strong>Perfect for:</strong> Developers who want to contribute, modify the source code, or run the latest development version.
+          </p>
+        </div>
+      </div>
+    )
+  }
+];
+
+const Installation = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const [openModal, setOpenModal] = useState<string | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  
+  // Analytics hook
+  const { trackDownload, trackCTA, trackCustomEvent } = useAnalytics();
+
+  // Intersection Observer for scroll-triggered animations
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '-50px'
+      }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Maps for URL parameter <-> modal name conversion
+  const modalNames: Record<string, string> = {
+    'smithery': 'Install via Smithery',
+    'docker': 'Install using Docker',
+    'manual': 'Install manually', 
+    'local': 'Install locally',
+    'cursor': 'Install in Cursor'
+  };
+
+  const modalNamesToSlugs: Record<string, string> = {
+    'Install via Smithery': 'smithery',
+    'Install using Docker': 'docker',
+    'Install manually': 'manual',
+    'Install locally': 'local',
+    'Install in Cursor': 'cursor'
+  };
+
+  // Helper function to update URL when modal opens/closes
+  const updateUrlForModal = (modalName: string | null) => {
+    const url = new URL(window.location.href);
+    
+    if (modalName && modalNamesToSlugs[modalName]) {
+      // Modal is opening - add install parameter
+      url.searchParams.set('install', modalNamesToSlugs[modalName]);
+      url.hash = 'installation';
+    } else {
+      // Modal is closing - remove install parameter but keep hash
+      url.searchParams.delete('install');
+      url.hash = 'installation';
+    }
+    
+    // Update URL without reloading the page
+    window.history.replaceState({}, '', url.toString());
+  };
+
+  // Check for installation parameter on load
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const installMethod = urlParams.get('install');
+    
+    if (installMethod) {
+      const modalName = modalNames[installMethod];
+      if (modalName) {
+        // Small delay to ensure component is mounted
+        setTimeout(() => {
+          setOpenModal(modalName);
+        }, 1000);
+        
+        // Track that someone used a direct install link
+        trackCustomEvent('direct_install_link_used', {
+          installation_method: modalName,
+          url_parameter: installMethod
+        });
+      }
+    }
+  }, [trackCustomEvent]);
+
+  return (
+    <section ref={sectionRef} id="installation" className="py-12 bg-dc-surface/30 scroll-mt-24">
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6">
+        {/* Header - Fade in */}
+        <div className={`text-center mb-10 transition-all duration-1000 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}>
+          <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-3">
+            Installation
+          </h2>
+          <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
+            MCP server for LLM clients
+          </p>
+        </div>
+
+        {/* Requirements - Staggered animation */}
+        <div className={`mb-8 transition-all duration-1000 delay-300 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}>
+          <div className="max-w-4xl mx-auto">
+            <div className="px-4">
+              <h3 className="text-base font-medium text-muted-foreground mb-3 text-left">
+                Requirements
+              </h3>
+              <div className="space-y-2">
+                {requirements.map((requirement, index) => (
+                  <div key={index} className="flex items-center gap-3">
+                    <Check className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                    <a
+                      href={requirement.downloadUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-muted-foreground hover:text-primary hover:underline transition-colors duration-200"
+                    >
+                      {requirement.text}
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Installation Options */}
+        <div className={`transition-all duration-1000 delay-500 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}>
+          <h3 className="text-xl sm:text-2xl font-semibold text-foreground mb-6 text-center">
+            Installation Options
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-4xl mx-auto">
+            {installationOptions.map((option, index) => (
+              <Card 
+                key={index} 
+                className={`p-6 bg-dc-card border-2 border-primary/30 hover:border-primary/50 transition-all duration-500 hover:scale-105 hover:shadow-lg relative ${!option.available ? 'opacity-60' : ''} ${
+                  isVisible 
+                    ? 'opacity-100 translate-y-0' 
+                    : 'opacity-0 translate-y-8'
+                }`}
+                style={{
+                  transitionDelay: isVisible ? `${700 + index * 200}ms` : '0ms'
+                }}
+              >
+                <div className="text-center mb-4">
+                  <h4 className="text-xl font-semibold text-foreground mb-2">
+                    {option.method}
+                  </h4>
+                  <div className="flex gap-2 justify-center flex-wrap">
+                    {Array.isArray(option.platform) ? (
+                      option.platform.map((platform, platformIndex) => (
+                        <span key={platformIndex} className={`px-3 py-1 rounded-full text-sm font-medium ${
+                          option.available 
+                            ? 'bg-primary/10 text-primary' 
+                            : 'bg-muted text-muted-foreground'
+                        }`}>
+                          {platform}
+                        </span>
+                      ))
+                    ) : (
+                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                        option.available 
+                          ? 'bg-primary/10 text-primary' 
+                          : 'bg-muted text-muted-foreground'
+                      }`}>
+                        {option.platform}
+                      </span>
+                    )}
+                    {/* Claude Desktop tag */}
+                    <span className="px-3 py-1 rounded-full text-sm font-medium bg-green-500/10 text-green-400 border border-green-500/20">
+                      Claude Desktop
+                    </span>
+                  </div>
+                </div>
+                
+                <p className="text-muted-foreground mb-4 text-center">
+                  {option.description}
+                </p>
+                
+                {option.command && (
+                  <div className="bg-background border border-dc-border rounded-lg p-4 font-mono text-sm mb-4 relative">
+                    <code className="text-primary break-all pr-8 block">{option.command}</code>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="absolute top-3 right-2 h-6 w-6 p-0 hover:bg-muted transition-all duration-300 hover:scale-110"
+                      onClick={() => {
+                        navigator.clipboard.writeText(option.command);
+                        trackCustomEvent('copy_command_clicked', {
+                          button_text: 'Copy',
+                          button_location: 'installation_main',
+                          installation_method: option.method,
+                          command: option.command
+                        });
+                      }}
+                    >
+                      <Copy className="h-3 w-3" />
+                    </Button>
+                  </div>
+                )}
+               </Card>
+             ))}
+          </div>
+        </div>
+
+        {/* Getting Started Callout - Delayed animation */}
+        <div className={`mt-10 transition-all duration-1000 delay-1000 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}>
+          <Card className="p-4 bg-primary/5 border-primary/20 max-w-4xl mx-auto hover:bg-primary/10 transition-all duration-300 hover:scale-105">
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 w-6 h-6 bg-primary/10 rounded-lg flex items-center justify-center transition-colors duration-300 group-hover:bg-primary/20">
+                <ArrowRight className="h-3 w-3 text-primary transition-transform duration-300 group-hover:translate-x-1" />
+              </div>
+              <div>
+                <h3 className="text-base font-semibold text-foreground mb-2">
+                  Getting Started
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Simply ask Claude or your LLM: <span className="font-semibold text-foreground">"What can I do with Desktop Commander?"</span> and you'll get guided tutorials and examples to discover what's possible.
+                </p>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {/* Additional Options */}
+        <div className="mt-10 max-w-4xl mx-auto">
+          <Accordion type="single" collapsible defaultValue="more-options" className="space-y-3">
+            {/* More Installation Options */}
+            <AccordionItem value="more-options" className="border border-dc-border rounded-lg bg-dc-card">
+              <AccordionTrigger className="px-4 py-3 hover:no-underline">
+                <h3 className="text-base font-semibold text-foreground">More installation options</h3>
+              </AccordionTrigger>
+              <AccordionContent className="px-4 pb-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                  {moreInstallationOptions.map((option, index) => (
+                    <Dialog 
+                      key={index}
+                      open={openModal === option.name}
+                      onOpenChange={(open) => {
+                        if (!open) {
+                          setOpenModal(null);
+                          updateUrlForModal(null);
+                        } else {
+                          setOpenModal(option.name);
+                          updateUrlForModal(option.name);
+                        }
+                      }}
+                    >
+                      <DialogTrigger asChild>
+                         <Button 
+                           variant="outline" 
+                           className="h-auto p-4 text-left justify-between items-center border-dc-border hover:bg-dc-surface/50 overflow-hidden"
+                         >
+                           <div className="flex-1 min-w-0">
+                             <div className="font-medium text-sm">{option.name}</div>
+                             <div className="text-xs text-muted-foreground mt-1">{option.description}</div>
+                           </div>
+                           <div className="flex-shrink-0 ml-3">
+                             <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                           </div>
+                         </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-4xl max-h-[90vh]">
+                        <DialogHeader>
+                          <DialogTitle>{option.name}</DialogTitle>
+                        </DialogHeader>
+                        <div className="space-y-4 overflow-y-auto max-h-[70vh]">
+                          {option.content}
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  ))}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+
+            {/* Uninstall */}
+            <AccordionItem value="uninstall" className="border border-dc-border rounded-lg bg-dc-card">
+              <AccordionTrigger className="px-4 py-3 hover:no-underline">
+                <h3 className="text-base font-semibold text-foreground">Uninstall</h3>
+              </AccordionTrigger>
+              <AccordionContent className="px-4 pb-4">
+                <div className="space-y-3">
+                  <p className="text-muted-foreground text-sm">Run this command in terminal:</p>
+                  <div className="bg-background border border-dc-border rounded-lg p-3 font-mono text-sm relative">
+                    <code className="text-primary break-all pr-8 block">npx @wonderwhy-er/desktop-commander@latest remove</code>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="absolute top-2 right-2 h-5 w-5 p-0 hover:bg-muted"
+                      onClick={() => {
+                        navigator.clipboard.writeText("npx @wonderwhy-er/desktop-commander@latest remove");
+                        trackCustomEvent('copy_command_clicked', {
+                          button_text: 'Copy',
+                          button_location: 'uninstall',
+                          installation_method: 'Uninstall',
+                          command: 'Remove command'
+                        });
+                      }}
+                    >
+                      <Copy className="h-3 w-3" />
+                    </Button>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    or remove the cloned directory and remove MCP server entry from config file.
+                  </p>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Installation;

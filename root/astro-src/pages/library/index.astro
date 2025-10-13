@@ -1,0 +1,23 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import NavigationAstro from '../../../src/components/NavigationAstro';
+import Footer from '../../../src/components/Footer';
+import LibraryIndex from '../../../src/components/library/LibraryIndex';
+---
+
+<Layout 
+  title="Prompt Library - Desktop Commander"
+  description="Discover powerful AI workflows and automation prompts for Desktop Commander"
+>
+  <div class="min-h-screen bg-background">
+    <NavigationAstro client:load />
+    <main>
+      <LibraryIndex client:load />
+    </main>
+    <Footer client:visible />
+  </div>
+</Layout>
+
+<style is:global>
+  @import '../../../src/index.css';
+</style>

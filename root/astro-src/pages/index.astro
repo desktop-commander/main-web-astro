@@ -1,0 +1,37 @@
+---
+import Layout from '../layouts/Layout.astro';
+import NavigationAstro from '../../src/components/NavigationAstro';
+import HeroAstro from '../../src/components/HeroAstro';
+import UseCases from '../../src/components/UseCases';
+import TrustedBy from '../../src/components/TrustedBy';
+import PromptLibrary from '../../src/components/PromptLibrary';
+import Installation from '../../src/components/Installation';
+import Blog from '../../src/components/Blog';
+import Community from '../../src/components/Community';
+import FAQ from '../../src/components/FAQ';
+import Footer from '../../src/components/Footer';
+---
+
+<Layout 
+  title="Desktop Commander - MCP Tool for Developers"
+  description="Manage files, set up servers, and deploy applications with ease using Claude's most powerful MCP tool"
+>
+  <div class="min-h-screen bg-background">
+    <NavigationAstro client:load />
+    <main>
+      <HeroAstro client:load />
+      <UseCases client:visible />
+      <TrustedBy client:visible />
+      <PromptLibrary client:visible />
+      <Installation client:visible />
+      <Blog client:visible />
+      <Community client:visible />
+      <FAQ client:visible />
+    </main>
+    <Footer client:visible />
+  </div>
+</Layout>
+
+<style is:global>
+  @import '../../src/index.css';
+</style>

@@ -1,0 +1,41 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import NavigationAstro from '../../../../src/components/NavigationAstro';
+import Footer from '../../../../src/components/Footer';
+import PromptDetailPage from '../../../../src/components/library/PromptDetailPage';
+import { useCasesWithSlugs } from '../../../../src/data/library/useCases';
+
+// Generate static paths for all prompts
+export async function getStaticPaths() {
+  return useCasesWithSlugs.map(useCase => ({
+    params: { slug: useCase.slug },
+    props: { useCase }
+  }));
+}
+
+// Get the slug and useCase from Astro
+const { slug } = Astro.params;
+const { useCase } = Astro.props;
+
+// If no use case found, redirect to main prompts page
+if (!useCase) {
+  return Astro.redirect('/library/prompts', 302);
+}
+
+const promptId = useCase.id;
+---
+
+<Layout 
+  title={`${useCase.title} - Desktop Commander`}
+  description={useCase.description}
+>
+  <div class="min-h-screen bg-background">
+    <NavigationAstro client:load />
+    <PromptDetailPage client:load useCase={useCase} />
+    <Footer client:visible />
+  </div>
+</Layout>
+
+<style is:global>
+  @import '../../../../src/index.css';
+</style>

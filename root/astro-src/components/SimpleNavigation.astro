@@ -1,0 +1,149 @@
+---
+// Simple Astro navigation - no React Router needed
+import dcLogo from '../../src/assets/dc-logo.png';
+---
+
+<nav class="fixed top-0 left-0 right-0 z-50 border-b border-dc-border bg-background/80 backdrop-blur-md">
+  <div class="container mx-auto max-w-7xl px-4 sm:px-6 py-4">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-8">
+        <a 
+          href="/" 
+          class="hover:opacity-80 transition-opacity"
+        >
+          <img src={dcLogo.src} alt="Desktop Commander" class="h-7 sm:h-8 w-auto" />
+        </a>
+        
+        <!-- Desktop Navigation -->
+        <div class="hidden lg:flex items-center gap-6">
+          <a href="/#use-cases" class="text-sm font-medium hover:text-primary transition-colors">
+            Use Cases
+          </a>
+          
+          <a href="/library/prompts" class="text-sm font-medium hover:text-primary transition-colors">
+            Prompt Library
+          </a>
+          
+          <a href="/#features" class="text-sm font-medium hover:text-primary transition-colors">
+            Features
+          </a>
+          
+          <a href="/careers" class="text-sm font-medium hover:text-primary transition-colors">
+            Careers
+          </a>
+          
+          <a 
+            href="https://github.com/desktopcommander/desktop-commander"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-sm font-medium hover:text-primary transition-colors flex items-center gap-1"
+          >
+            GitHub
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
+        </div>
+      </div>
+      
+      <!-- CTA Button -->
+      <div class="hidden lg:block">
+        <a 
+          href="https://docs.desktopcommander.app/installation"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 gap-2"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="14" height="8" x="5" y="2" rx="2"></rect>
+            <rect width="20" height="8" x="2" y="14" rx="2"></rect>
+            <path d="M6 18h2"></path>
+            <path d="M12 18h6"></path>
+          </svg>
+          Install Desktop Commander
+        </a>
+      </div>
+      
+      <!-- Mobile Menu Button -->
+      <button class="lg:hidden" id="mobile-menu-button" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="4" x2="20" y1="12" y2="12"></line>
+          <line x1="4" x2="20" y1="6" y2="6"></line>
+          <line x1="4" x2="20" y1="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu (hidden by default) -->
+<div id="mobile-menu" class="hidden fixed inset-0 z-40 bg-background lg:hidden">
+  <div class="flex flex-col h-full p-6">
+    <div class="flex items-center justify-between mb-8">
+      <img src={dcLogo.src} alt="Desktop Commander" class="h-7 w-auto" />
+      <button id="mobile-menu-close" aria-label="Close menu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6 6 18"></path>
+          <path d="m6 6 12 12"></path>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="flex flex-col gap-4">
+      <a href="/#use-cases" class="text-lg font-medium hover:text-primary transition-colors">
+        Use Cases
+      </a>
+      <a href="/library/prompts" class="text-lg font-medium hover:text-primary transition-colors">
+        Prompt Library
+      </a>
+      <a href="/#features" class="text-lg font-medium hover:text-primary transition-colors">
+        Features
+      </a>
+      <a href="/careers" class="text-lg font-medium hover:text-primary transition-colors">
+        Careers
+      </a>
+      <a 
+        href="https://github.com/desktopcommander/desktop-commander"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-lg font-medium hover:text-primary transition-colors"
+      >
+        GitHub
+      </a>
+      
+      <a 
+        href="https://docs.desktopcommander.app/installation"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="mt-4 inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+      >
+        Install Desktop Commander
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Mobile menu toggle
+  const menuButton = document.getElementById('mobile-menu-button');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const closeButton = document.getElementById('mobile-menu-close');
+  
+  menuButton?.addEventListener('click', () => {
+    mobileMenu?.classList.remove('hidden');
+  });
+  
+  closeButton?.addEventListener('click', () => {
+    mobileMenu?.classList.add('hidden');
+  });
+  
+  // Close menu when clicking a link
+  const mobileLinks = mobileMenu?.querySelectorAll('a');
+  mobileLinks?.forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu?.classList.add('hidden');
+    });
+  });
+</script>

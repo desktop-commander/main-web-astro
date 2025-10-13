@@ -1,0 +1,32 @@
+{
+  "name": "main-web-astro",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "build": "cd ./root && npm run build",
+    "build:dev": "cd ./root && npm run build:dev",
+    "postbuild": "echo \"desktopcommander.app\" > docs/CNAME",
+    "commit-static": "git rm -r --cached docs/ 2>/dev/null || true && npm run build && git add docs/ && git commit -m 'Static website changes'",
+    "serve": "npx serve docs --listen 3000 --single",
+    "serve:static": "npx serve docs --listen 3000 --single",
+    "serve:docs": "npx serve docs --listen 3000 --single"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:desktop-commander/main-web-astro.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "Desktop Commander landing page - Astro version",
+  "devDependencies": {
+    "serve": "^14.2.3"
+  },
+  "workspaces": [
+    "root"
+  ]
+}

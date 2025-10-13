@@ -1,0 +1,27 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import NavigationAstro from '../../../../src/components/NavigationAstro';
+import Footer from '../../../../src/components/Footer';
+import PromptsLibrary from '../../../../src/components/library/PromptsLibraryAstro';
+
+// Get the prompt ID from URL params for deep linking
+const url = new URL(Astro.request.url);
+const promptId = url.searchParams.get('i');
+---
+
+<Layout 
+  title="Prompt Library - Desktop Commander"
+  description="Browse 60+ curated prompts for Desktop Commander MCP"
+>
+  <div class="min-h-screen bg-background">
+    <NavigationAstro client:load />
+    <main>
+      <PromptsLibrary client:load initialPromptId={promptId} />
+    </main>
+    <Footer client:visible />
+  </div>
+</Layout>
+
+<style is:global>
+  @import '../../../../src/index.css';
+</style>

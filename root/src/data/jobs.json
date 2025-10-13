@@ -1,0 +1,59 @@
+{
+  "jobs": [
+    {
+      "id": "senior-fullstack-ai-engineer-2025",
+      "title": "Senior Full Stack AI Engineer",
+      "department": "Engineering",
+      "location": "Remote (Latvia/Portugal based team)",
+      "type": "Full-time",
+      "description": "Desktop Commander, an early stage startup is seeking a Senior AI Full Stack Engineer to develop AI applications that integrate with LLMs and the Model Context Protocol (MCP) ecosystem.\n\nYou'll work at the forefront of AI technology, creating intelligent applications that enable seamless human-AI collaboration. As the first technical hire outside the founding team, you'll have incredible upside and be expected to make a meaningful impact quickly.\n\nYou'll build and maintain AI applications using modern JavaScript/TypeScript, backed by our Google Cloud infrastructure. This role involves deep LLM integration, MCP implementations, and creating intuitive user experiences for AI-powered workflows.\n\nWe are looking for a driven, independent person who truly cares about delivering results, making an impact, and driving the company forward. Our team is based in Latvia and Portugal.\n\nIf you believe you are qualified but your skills don't perfectly match every item listed, we encourage you to apply anyway. We value potential, learning ability, and motivation as much as formal skill matches.",
+      "responsibilities": [
+        "Build scalable AI assistant application integrating LLMs and MCP functionality",
+        "LLM Integration: Implement AI conversation flows, prompt management, streaming responses",
+        "Multi platform desktop architecture: Design Electron-based applications with secure IPC communication",
+        "MCP Integration: Develop integrations with MCP servers for enhanced AI capabilities",
+        "User Experience: Create intuitive interfaces for AI interactions and intelligent assistance",
+        "Provide technical support to customers, work with the user community and open source project"
+      ],
+      "requirements": [
+        "5+ years of software development with JavaScript/TypeScript and Node.js",
+        "Advanced TypeScript/NodeJS expertise",
+        "Experience with SQL databases and REST API development",
+        "Experience working with streaming APIs (e.g. SSE/WebSockets) for LLM responses, implementing end-to-end token streaming from LLM to backend and frontend with minimal latency",
+        "AI code generation and review experience",
+        "Building AI-powered features in production with LLM APIs (OpenAI, Anthropic, etc.) and understanding of how to translate machine intelligence into user value",
+        "Hands-on experience with prompt engineering and context management",
+        "AI Workflow automations: Experience and understanding of building workflow automations (experience with n8n will be a plus)",
+        "Client-server applications or API integrations experience",
+        "Familiarity with AI/ML concepts and LLM APIs",
+        "Understanding of async programming and event-driven architectures",
+        "Driven, independent person who truly cares about delivering results, making an impact, and driving the company forward"
+      ],
+      "niceToHave": [
+        "Model Context Protocol (MCP): MCP client implementation, tool calling, transport protocols (STDIO, SSE)",
+        "Cross-platform desktop development with Electron with IPC communication",
+        "Google Cloud Platform (GCP) experience",
+        "Docker and other containerization tools",
+        "Experience with internal process automation with n8n or similar tools",
+        "Developer Tools: Building SDKs, CLIs, or developer-facing applications",
+        "Knowledge about application security standards"
+      ],
+      "bonusPoints": [
+        "Open Source Contributions: AI tools, LLM integrations, or MCP-related projects"
+      ],
+      "benefits": [
+        "You will be the first engineering hire besides the founding team, hence, the upside is as big as it can get",
+        "Transparent culture, where you will be exposed to working with investors and customers",
+        "Stock options after the trial period",
+        "Cutting-Edge AI Technology: Work with latest AI technologies and application development",
+        "Impactful Work: Build AI applications enhancing human productivity and collaboration",
+        "Learning Opportunities: Stay current with rapidly evolving AI/LLM landscape",
+        "Growth Path: Become a subject matter expert in AI client development and LLM integration",
+        "Competitive salary in line with market rates, your experience and impact - in the range of EUR 4500 to 6500 before taxes"
+      ],
+      "applyUrl": "mailto:ll@desktopcommander.app",
+      "isActive": true,
+      "postedDate": "2025-10-09"
+    }
+  ]
+}
