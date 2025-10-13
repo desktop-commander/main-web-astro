@@ -1,0 +1,24 @@
+---
+// This component handles dynamic base path detection
+// It works for both GitHub Pages subpath and custom domain
+---
+
+<script is:inline>
+  // Detect if we're on GitHub Pages or custom domain
+  (function() {
+    const hostname = window.location.hostname;
+    const isGitHubPages = hostname.includes('github.io');
+    
+    if (isGitHubPages) {
+      // We're on GitHub Pages - need to handle base path
+      const pathname = window.location.pathname;
+      const basePath = '/main-web-astro';
+      
+      // If the current path doesn't start with our base path, redirect
+      if (!pathname.startsWith(basePath)) {
+        const newPath = basePath + (pathname === '/' ? '' : pathname);
+        window.location.href = window.location.origin + newPath + window.location.search + window.location.hash;
+      }
+    }
+  })();
+</script>

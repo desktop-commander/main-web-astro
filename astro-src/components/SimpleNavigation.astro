@@ -1,6 +1,7 @@
 ---
 // Simple Astro navigation - no React Router needed
 import dcLogo from '../../src/assets/dc-logo.png';
+import { getLink } from '../utils/basePath';
 ---
 
 <nav class="fixed top-0 left-0 right-0 z-50 border-b border-dc-border bg-background/80 backdrop-blur-md">
@@ -8,7 +9,7 @@ import dcLogo from '../../src/assets/dc-logo.png';
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-8">
         <a 
-          href="/" 
+          href={getLink('/')}
           class="hover:opacity-80 transition-opacity"
         >
           <img src={dcLogo.src} alt="Desktop Commander" class="h-7 sm:h-8 w-auto" />
@@ -16,19 +17,19 @@ import dcLogo from '../../src/assets/dc-logo.png';
         
         <!-- Desktop Navigation -->
         <div class="hidden lg:flex items-center gap-6">
-          <a href="/#use-cases" class="text-sm font-medium hover:text-primary transition-colors">
+          <a href={getLink('/#use-cases')} class="text-sm font-medium hover:text-primary transition-colors">
             Use Cases
           </a>
           
-          <a href="/library/prompts" class="text-sm font-medium hover:text-primary transition-colors">
+          <a href={getLink('/library/prompts')} class="text-sm font-medium hover:text-primary transition-colors">
             Prompt Library
           </a>
           
-          <a href="/#features" class="text-sm font-medium hover:text-primary transition-colors">
+          <a href={getLink('/#features')} class="text-sm font-medium hover:text-primary transition-colors">
             Features
           </a>
           
-          <a href="/careers" class="text-sm font-medium hover:text-primary transition-colors">
+          <a href={getLink('/careers')} class="text-sm font-medium hover:text-primary transition-colors">
             Careers
           </a>
           
@@ -92,16 +93,16 @@ import dcLogo from '../../src/assets/dc-logo.png';
     </div>
     
     <div class="flex flex-col gap-4">
-      <a href="/#use-cases" class="text-lg font-medium hover:text-primary transition-colors">
+      <a href={getLink('/#use-cases')} class="text-lg font-medium hover:text-primary transition-colors">
         Use Cases
       </a>
-      <a href="/library/prompts" class="text-lg font-medium hover:text-primary transition-colors">
+      <a href={getLink('/library/prompts')} class="text-lg font-medium hover:text-primary transition-colors">
         Prompt Library
       </a>
-      <a href="/#features" class="text-lg font-medium hover:text-primary transition-colors">
+      <a href={getLink('/#features')} class="text-lg font-medium hover:text-primary transition-colors">
         Features
       </a>
-      <a href="/careers" class="text-lg font-medium hover:text-primary transition-colors">
+      <a href={getLink('/careers')} class="text-lg font-medium hover:text-primary transition-colors">
         Careers
       </a>
       <a 
