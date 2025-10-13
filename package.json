@@ -15,7 +15,8 @@
     "serve": "npx serve docs --listen 3000",
     "serve:static": "npx serve docs --listen 3000",
     "server:static": "npx serve docs --listen 3000",
-    "commit-static": "git rm -r --cached docs/ 2>/dev/null || true && npm run build && git add docs/ && git commit -m 'Static website changes'"
+    "commit-static": "git rm -r --cached docs/ 2>/dev/null || true && npm run build && git add docs/ && git commit -m 'Static website changes'",
+    "commit-static-github": "git rm -r --cached docs/ 2>/dev/null || true && npm run build:github && git add docs/ && git commit -m 'Static website changes'"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
