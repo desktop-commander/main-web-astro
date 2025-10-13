@@ -11,9 +11,8 @@ export default defineConfig({
   // Output to docs folder for GitHub Pages
   outDir: './docs',
   
-  // Set base for GitHub Pages
-  // Will be set to '/' for custom domain
-  base: '/',
+  // Dynamic base path: adjusts automatically for github.io or custom domain
+  base: typeof process !== 'undefined' && process.env.BASE_PATH ? process.env.BASE_PATH : '/',
   
   integrations: [
     react(),

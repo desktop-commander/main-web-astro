@@ -12,9 +12,9 @@
     "preview": "astro preview",
     "generate:sitemap": "node generate-sitemap.js",
     "lint": "eslint .",
-    "serve": "npx serve docs --listen 3000 --single",
-    "serve:static": "npx serve docs --listen 3000 --single",
-    "serve:docs": "npx serve docs --listen 3000 --single",
+    "serve": "npx serve docs --listen 3000",
+    "serve:static": "npx serve docs --listen 3000",
+    "server:static": "npx serve docs --listen 3000",
     "commit-static": "git rm -r --cached docs/ 2>/dev/null || true && npm run build && git add docs/ && git commit -m 'Static website changes'"
   },
   "dependencies": {
