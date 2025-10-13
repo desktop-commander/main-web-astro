@@ -8,6 +8,7 @@ import TestimonialsRow from '@/components/library/TestimonialsRow';
 import { SubmitPromptButton } from '@/components/library/SubmitPromptButton';
 import { EngagementMeter } from '@/components/library/EngagementMeter';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { getLink } from '@/utils/basePath';
 
 // Helper function to check if a prompt is new (within 14 days)
 const isNewPrompt = (dateAdded?: string): boolean => {
@@ -111,7 +112,7 @@ const LibraryIndex = () => {
 
   const handleUseCaseClick = (useCase: any) => {
     // Navigate to slug URL - this will cause page load and modal to open
-    window.location.href = `/library/prompts/${useCase.slug}`;
+    window.location.href = getLink(`/library/prompts/${useCase.slug}`);
   };
 
   const getSessionTypeDisplay = (sessionType: string) => {

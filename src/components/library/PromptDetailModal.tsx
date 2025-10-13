@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { UseCase, sessionTypeExplanations } from "@/data/library/useCases";
 import { formatCompactNumber } from '@/lib/utils';
+import { getLink } from '@/utils/basePath';
 import { 
   Heart, 
   User,
@@ -387,7 +388,7 @@ export function PromptDetailModal({ useCase, isOpen, onClose, onVote, isFullPage
   };
 
   const getShareUrl = (shareSource = 'share_button') => {
-    const url = new URL(`/library/prompts/${useCase.slug}`, window.location.origin);
+    const url = new URL(getLink(`/library/prompts/${useCase.slug}`), window.location.origin);
     
     // Add share tracking parameters
     url.searchParams.set('utm_source', 'desktop_commander');

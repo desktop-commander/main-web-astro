@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { idToSlugMap } from '@/data/library/useCases';
+import { getLink } from '@/utils/basePath';
 
 /**
  * Component to handle redirects from old URL format (/library?i=123) 
@@ -17,7 +18,7 @@ const LegacyRedirect = () => {
       const slug = idToSlugMap[promptId];
       
       // Preserve UTM parameters when redirecting
-      const newUrl = new URL(`/library/prompts/${slug}`, window.location.origin);
+      const newUrl = new URL(getLink(`/library/prompts/${slug}`), window.location.origin);
       const utmParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'shared_at'];
       
       utmParams.forEach(param => {

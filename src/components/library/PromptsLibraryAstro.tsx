@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { ExternalLink } from 'lucide-react';
 import { PromptDetailModal } from '@/components/library/PromptDetailModal';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { getLink } from '@/utils/basePath';
 
 interface PromptsLibraryProps {
   initialPromptId?: string | null;
@@ -117,7 +118,7 @@ export default function PromptsLibrary({ initialPromptId }: PromptsLibraryProps)
   const handlePromptClick = (useCase: UseCase) => {
     // Navigate to slug URL - causes page navigation and modal opens
     const slug = useCase.slug || useCase.id;
-    window.location.href = `/library/prompts/${slug}`;
+    window.location.href = getLink(`/library/prompts/${slug}`);
   };
 
   const handleVote = (id: string) => {
