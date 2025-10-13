@@ -1,0 +1,1 @@
+var a={};function s(){if(typeof window>"u")return a.BASE_PATH||"/";const{hostname:t,pathname:n}=window.location;if(t.includes("github.io")){const e=n.match(/^\/([^/]+)/);return e?`/${e[1]}`:"/"}return"/"}function c(t){const n=s(),e=t.startsWith("/")?t.slice(1):t;return`${n}/${e}`.replace(/\/+/g,"/")}export{c as g};
