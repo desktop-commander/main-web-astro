@@ -7,6 +7,9 @@ interface Props {
 
 const { title, description, ogImage = '/bg-social-share.png' } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'http://localhost:4321');
+
+// Import the base path fixer
+import BasePathFixer from '../components/BasePathFixer.astro';
 ---
 
 <!DOCTYPE html>
@@ -32,8 +35,14 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'http://localhost
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+    
+    <!-- Inject base path for React components -->
+    <script is:inline define:vars={{ basePath: import.meta.env.BASE_URL }}>
+      window.__BASE_PATH__ = basePath;
+    </script>
   </head>
   <body>
+    <BasePathFixer />
     <slot />
   </body>
 </html>

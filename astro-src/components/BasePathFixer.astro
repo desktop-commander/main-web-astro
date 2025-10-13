@@ -1,0 +1,59 @@
+---
+// This component fixes internal links on the client side for GitHub Pages compatibility
+---
+
+<script is:inline>
+  // Fix internal links to include base path
+  (function() {
+    // Get base path from Astro
+    const basePath = window.__BASE_PATH__ || '/';
+    
+    // Only fix links if we have a non-root base path
+    if (basePath === '/') return;
+    
+    function fixLink(element) {
+      const href = element.getAttribute('href');
+      if (!href) return;
+      
+      // Only fix internal links (starting with /)
+      if (href.startsWith('/') && !href.startsWith(basePath)) {
+        // Don't fix if it's already correctly prefixed or if it's a hash/anchor
+        if (!href.startsWith('#')) {
+          const newHref = basePath.replace(/\/$/, '') + href;
+          element.setAttribute('href', newHref);
+        }
+      }
+    }
+    
+    // Fix all existing links
+    function fixAllLinks() {
+      document.querySelectorAll('a[href^="/"]').forEach(fixLink);
+    }
+    
+    // Fix on load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', fixAllLinks);
+    } else {
+      fixAllLinks();
+    }
+    
+    // Also fix dynamically added links
+    const observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        mutation.addedNodes.forEach(node => {
+          if (node.nodeType === 1) { // Element node
+            if (node.tagName === 'A') {
+              fixLink(node);
+            }
+            node.querySelectorAll?.('a[href^="/"]').forEach(fixLink);
+          }
+        });
+      });
+    });
+    
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  })();
+</script>
