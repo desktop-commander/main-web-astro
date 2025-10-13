@@ -5,17 +5,14 @@ Modern, SEO-optimized landing page for Desktop Commander built with Astro and Re
 ## 🚀 Quick Start
 
 ```bash
-# Install root dependencies
+# Install dependencies
 npm install
 
-# Install project dependencies
-cd root && npm install
-
 # Run development server
-cd root && npm run dev
-
-# Or from root directory
 npm run dev
+
+# Build for production
+npm run build
 ```
 
 Visit `http://localhost:4321` to see the site.
@@ -23,70 +20,67 @@ Visit `http://localhost:4321` to see the site.
 ## 📦 Build for Production
 
 ```bash
-# From root directory
 npm run build
 
 # This will:
 # 1. Build Astro site to docs/
-# 2. Generate sitemap.xml
+# 2. Generate sitemap.xml in docs/
 # 3. Add CNAME file for custom domain
 # 4. Copy index.html to 404.html for SPA fallback
 ```
 
 ## 🌐 Deployment (GitHub Pages)
 
-The site is configured to deploy to GitHub Pages:
+The site is configured to deploy to GitHub Pages from the `docs/` folder:
 
-1. Build the site: `npm run build`
-2. Commit changes: `npm run commit-static`
-3. Push to GitHub
-4. GitHub Actions will deploy the `docs/` folder
+```bash
+# Build and commit the docs folder
+npm run commit-static
+
+# Push to GitHub
+git push
+```
 
 ### GitHub Pages Configuration
 
-- **Source**: Deploy from `docs/` folder on `main` branch
-- **Custom Domain**: `desktopcommander.app` (set in CNAME)
-- **Base URL**: `/` (root domain)
+1. Go to repository Settings → Pages
+2. Set **Source**: Deploy from `docs/` folder on `main` branch
+3. Set **Custom Domain**: `desktopcommander.app`
+4. GitHub will automatically serve from `docs/`
+
+The `docs/` folder **is committed to git** (not gitignored) for GitHub Pages deployment.
 
 ## 📁 Project Structure
 
 ```
 main-web-astro/
-├── root/                       # Main Astro project
-│   ├── astro-src/             # Astro pages and layouts
-│   │   ├── layouts/           # Page layouts
-│   │   └── pages/             # Route pages (.astro files)
-│   ├── src/                   # React components and utilities
-│   │   ├── components/        # React components
-│   │   ├── data/              # Data files (prompts, etc)
-│   │   ├── hooks/             # React hooks
-│   │   └── lib/               # Utilities
-│   ├── public/                # Static assets
-│   └── docs/                  # Build output (GitHub Pages)
-├── package.json               # Root workspace config
-└── README.md                  # This file
+├── astro-src/             # Astro pages and layouts
+│   ├── layouts/           # Page layouts
+│   └── pages/             # Route pages (.astro files)
+├── src/                   # React components and utilities
+│   ├── components/        # React components
+│   ├── data/              # Data files (prompts, etc)
+│   ├── hooks/             # React hooks
+│   └── lib/               # Utilities
+├── public/                # Static assets
+├── docs/                  # Build output (committed for GitHub Pages)
+├── package.json           # Dependencies and scripts
+└── astro.config.mjs       # Astro configuration
 ```
 
 ## 🛠️ Available Scripts
 
-### Root Level
 ```bash
-npm run build           # Build production site
-npm run build:dev       # Build development site
-npm run serve           # Serve built site locally
-npm run serve:static    # Serve built site (alias)
-npm run serve:docs      # Serve built site (alias)
-npm run commit-static   # Build and commit docs/ folder
-```
-
-### Root Directory (`cd root/`)
-```bash
-npm run dev             # Start dev server
+npm run dev             # Start dev server (localhost:4321)
 npm run dev:host        # Start dev server (network accessible)
-npm run build           # Build for production
+npm run build           # Build for production → docs/
 npm run build:dev       # Build for development
 npm run preview         # Preview production build
 npm run lint            # Run ESLint
+npm run serve           # Serve built site from docs/
+npm run serve:static    # Serve built site (alias)
+npm run serve:docs      # Serve built site (alias)
+npm run commit-static   # Build + commit docs/ folder
 npm run generate:sitemap # Generate sitemap only
 ```
 
@@ -113,22 +107,23 @@ npm run generate:sitemap # Generate sitemap only
 
 ## 🔧 Configuration
 
-### Astro Config (`root/astro.config.mjs`)
+### Astro Config (`astro.config.mjs`)
 - Output directory: `./docs` (for GitHub Pages)
 - Base URL: `/` (for custom domain)
 - Format: `directory` (clean URLs)
 
-### Package.json Scripts
-- Matches original repo structure
-- `build` → outputs to `docs/`
-- `postbuild` → adds CNAME and 404.html
+### Build Output
+- The `docs/` folder contains the built static site
+- This folder **IS committed to git** for GitHub Pages
+- GitHub Pages serves directly from `docs/` on the `main` branch
 
 ## 🚨 Important Notes
 
-- The `docs/` folder is gitignored and generated on build
-- Always run `npm run build` before deploying
+- **The `docs/` folder IS committed** (not gitignored) for GitHub Pages
+- Always run `npm run build` before committing changes
+- Use `npm run commit-static` to build and commit in one step
 - CNAME file is auto-generated with custom domain
-- 404.html is auto-generated for SPA-like routing
+- 404.html is auto-generated for client-side routing fallback
 
 ## 📚 Documentation
 
@@ -152,10 +147,10 @@ rm -rf node_modules package-lock.json
 npm install
 ```
 
-### Docs folder missing after build
+### Docs folder not building
 ```bash
 # Ensure build completes
-cd root && npm run build
+npm run build
 # Check for errors in output
 ```
 

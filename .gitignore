@@ -1,8 +1,33 @@
-# .gitignore for root directory
+# Astro build output
+dist/
+
+# Built site for GitHub Pages - DO NOT IGNORE, needs to be committed
+# docs/
+
+# Dependencies
 node_modules/
-docs/
-.DS_Store
-*.log
+
+# Environment
 .env
-.env.*
-!.env.example
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Astro
+.astro/
