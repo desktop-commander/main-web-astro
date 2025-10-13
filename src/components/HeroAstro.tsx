@@ -17,28 +17,11 @@ const HeroAstro = () => {
   const heroRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Helper function for asset paths
-  const getAssetPath = (filename: string) => {
-    if (import.meta.env.MODE === 'development') return `/${filename}`;
-    
-    const { pathname, hostname } = window.location;
-    
-    if (pathname.match(/^\/pr-\d+\//)) {
-      const prPath = pathname.match(/^\/pr-\d+/)[0];
-      return `${prPath}/${filename}`;
-    }
-    
-    if (hostname.includes('github.io') && pathname.startsWith('/main-web/')) {
-      return `/main-web/${filename}`;
-    }
-    
-    return `/${filename}`;
-  };
-
-  // Media loading
+  // Media loading - only runs on client
   useEffect(() => {
-    const videoPath = getAssetPath('hero-video.mp4');
-    const gifPath = getAssetPath('hero-8sec.gif');
+    // Simple paths for now - assets in public folder
+    const videoPath = '/hero-video.mp4';
+    const gifPath = '/hero-8sec.gif';
     
     const video = document.createElement('video');
     video.oncanplaythrough = () => {
