@@ -11,8 +11,10 @@ export default defineConfig({
   // Output to docs folder for GitHub Pages
   outDir: './docs',
   
-  // Dynamic base path: adjusts automatically for github.io or custom domain
-  base: typeof process !== 'undefined' && process.env.BASE_PATH ? process.env.BASE_PATH : '/',
+  // Base path: controlled by BASE_PATH environment variable
+  // - For production (desktopcommander.app): BASE_PATH=/ npm run build
+  // - For GitHub Pages: BASE_PATH=/main-web-astro npm run build:github
+  base: process.env.BASE_PATH || '/',
   
   integrations: [
     react(),

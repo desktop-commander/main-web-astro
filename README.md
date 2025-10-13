@@ -19,14 +19,47 @@ Visit `http://localhost:4321` to see the site.
 
 ## 📦 Build for Production
 
+### For Custom Domain (desktopcommander.app)
+
 ```bash
 npm run build
+```
 
-# This will:
-# 1. Build Astro site to docs/
-# 2. Generate sitemap.xml in docs/
-# 3. Add CNAME file for custom domain
-# 4. Copy index.html to 404.html for SPA fallback
+This builds with `base: '/'` and:
+- Outputs to `docs/` folder
+- Generates sitemap.xml
+- Adds CNAME file for custom domain
+- Creates 404.html fallback
+- All assets use root paths: `/assets/...`
+
+### For GitHub Pages Subdirectory (desktop-commander.github.io/main-web-astro)
+
+```bash
+npm run build:github
+```
+
+This builds with `base: '/main-web-astro'` and:
+- Outputs to `docs/` folder
+- All assets use subdirectory paths: `/main-web-astro/assets/...`
+- **Note:** Remove the CNAME file after this build if deploying to subdirectory
+
+### Deployment Workflow
+
+**Production (Custom Domain):**
+```bash
+npm run build
+git add docs/
+git commit -m "Deploy to production"
+git push
+```
+
+**GitHub Pages Testing:**
+```bash
+npm run build:github
+rm docs/CNAME  # Remove CNAME to use subdirectory
+git add docs/
+git commit -m "Deploy to GitHub Pages subdirectory"
+git push
 ```
 
 ## 🌐 Deployment (GitHub Pages)
