@@ -121,7 +121,7 @@ const PromptDetailPage = ({ useCase }: PromptDetailPageProps) => {
   };
 
   const handleClose = () => {
-    window.location.href = '/library';
+    window.location.href = getLink('/library/prompts');
   };
 
   const handleVote = () => {
