@@ -19,9 +19,9 @@ const HeroAstro = () => {
 
   // Media loading - only runs on client
   useEffect(() => {
-    // Simple paths for now - assets in public folder
-    const videoPath = '/hero-video.mp4';
-    const gifPath = '/hero-8sec.gif';
+    // Use getAssetPath to properly handle base path for GitHub Pages
+    const videoPath = getAssetPath('/hero-video.mp4');
+    const gifPath = getAssetPath('/hero-8sec.gif');
     
     const video = document.createElement('video');
     video.oncanplaythrough = () => {
@@ -162,7 +162,7 @@ const HeroAstro = () => {
                   {mediaLoaded && !useVideo && (
                     <img
                       className="hero-gif w-full h-full object-cover transition-opacity duration-500 opacity-100"
-                      src={getAssetPath('hero.gif')}
+                      src={getAssetPath('hero-8sec.gif')}
                       alt="Desktop Commander in action"
                       loading="eager"
                       style={{ imageRendering: 'auto' }}
