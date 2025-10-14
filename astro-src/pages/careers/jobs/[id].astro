@@ -29,6 +29,15 @@ const formatDate = (dateString: string) => {
     day: 'numeric' 
   });
 };
+
+// Helper to format responsibility text with bold
+const formatResponsibility = (text: string) => {
+  if (text.includes(':')) {
+    const parts = text.split(':');
+    return { label: parts[0], rest: parts.slice(1).join(':') };
+  }
+  return { label: null, rest: text };
+};
 ---
 
 <Layout 
@@ -126,14 +135,20 @@ const formatDate = (dateString: string) => {
           <section>
             <h2 class="text-2xl font-semibold mb-4">What you'll do:</h2>
             <ul class="space-y-3">
-              {job.responsibilities.map((responsibility) => (
-                <li class="flex items-start gap-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary flex-shrink-0 mt-0.5">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                  <span class="text-muted-foreground leading-relaxed">{responsibility}</span>
-                </li>
-              ))}
+              {job.responsibilities.map((responsibility) => {
+                const formatted = formatResponsibility(responsibility);
+                return (
+                  <li class="flex items-start gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary flex-shrink-0 mt-0.5">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span class="text-muted-foreground leading-relaxed">
+                      {formatted.label && <strong>{formatted.label}:</strong>}
+                      {formatted.rest}
+                    </span>
+                  </li>
+                );
+              })}
             </ul>
           </section>
 
