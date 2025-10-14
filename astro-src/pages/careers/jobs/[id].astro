@@ -1,0 +1,41 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import NavigationAstro from '../../../../src/components/NavigationAstro';
+import Footer from '../../../../src/components/Footer';
+import JobDetailPage from '../../../../src/components/JobDetailPage';
+import jobsData from '../../../../src/data/jobs.json';
+
+// Generate static paths for all jobs
+export async function getStaticPaths() {
+  return jobsData.jobs.map(job => ({
+    params: { id: job.id },
+    props: { job }
+  }));
+}
+
+// Get the job ID and job data from Astro
+const { id } = Astro.params;
+const { job } = Astro.props;
+
+// If no job found, redirect to careers page
+if (!job) {
+  return Astro.redirect('/careers', 302);
+}
+---
+
+<Layout 
+  title={`${job.title} - Desktop Commander`}
+  description={job.description}
+>
+  <div class="min-h-screen bg-background">
+    <NavigationAstro client:load />
+    <div class="pt-20">
+      <JobDetailPage client:load job={job} />
+    </div>
+    <Footer client:visible />
+  </div>
+</Layout>
+
+<style is:global>
+  @import '../../../../src/index.css';
+</style>

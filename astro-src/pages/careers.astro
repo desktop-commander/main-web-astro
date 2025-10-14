@@ -1,11 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import NavigationAstro from '../../src/components/NavigationAstro';
-import CareersHero from '../../src/components/CareersHero';
 import JobListings from '../../src/components/JobListings';
-import CompanyCulture from '../../src/components/CompanyCulture';
-import CareersPerks from '../../src/components/CareersPerks';
-import ApplicationProcess from '../../src/components/ApplicationProcess';
 import Footer from '../../src/components/Footer';
 ---
 
@@ -16,11 +12,7 @@ import Footer from '../../src/components/Footer';
   <div class="min-h-screen bg-background">
     <NavigationAstro client:load />
     <main>
-      <CareersHero client:visible />
       <JobListings client:visible />
-      <CompanyCulture client:visible />
-      <CareersPerks client:visible />
-      <ApplicationProcess client:visible />
     </main>
     <Footer client:visible />
   </div>

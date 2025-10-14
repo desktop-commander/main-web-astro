@@ -33,6 +33,7 @@ import {
 import { useCareers } from "@/hooks/useCareers";
 import { Job } from "@/lib/careers";
 import { useState, useEffect } from "react";
+import { getLink } from "@/utils/basePath";
 
 const JobModal = ({ job, open, onOpenChange }: { job: Job; open: boolean; onOpenChange: (open: boolean) => void }) => {
   const [showApplyDialog, setShowApplyDialog] = useState(false);
@@ -230,7 +231,7 @@ const JobModal = ({ job, open, onOpenChange }: { job: Job; open: boolean; onOpen
   );
 };
 
-const JobCard = ({ job, onOpenModal }: { job: Job; onOpenModal: () => void }) => {
+const JobCard = ({ job }: { job: Job }) => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { 
@@ -246,8 +247,12 @@ const JobCard = ({ job, onOpenModal }: { job: Job; onOpenModal: () => void }) =>
     return text.substring(0, maxLength).trim() + '...';
   };
 
+  const handleClick = () => {
+    window.location.href = getLink(`/careers/jobs/${job.id}`);
+  };
+
   return (
-    <Card className="group hover:shadow-lg transition-all duration-300 cursor-pointer" onClick={onOpenModal}>
+    <Card className="group hover:shadow-lg transition-all duration-300 cursor-pointer" onClick={handleClick}>
       <CardHeader>
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
           <div className="flex-1">
@@ -334,7 +339,7 @@ const JobListings = () => {
 
   return (
     <>
-      <section id="job-listings" className="py-20 bg-background">
+      <section id="job-listings" className="pt-32 pb-20 bg-background">
         <div className="container mx-auto px-4">
           {/* Header */}
           <div className="text-center mb-16">
@@ -358,8 +363,7 @@ const JobListings = () => {
               {jobs.map((job) => (
                 <JobCard 
                   key={job.id} 
-                  job={job} 
-                  onOpenModal={() => setSelectedJob(job)}
+                  job={job}
                 />
               ))}
             </div>
