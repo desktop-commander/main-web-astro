@@ -214,21 +214,11 @@ const PromptDetailPage = ({ useCase }: PromptDetailPageProps) => {
     <PostHogProvider>
       <TooltipProvider>
         <div className="min-h-screen bg-background mt-20">
-          <div className="container mx-auto px-4 py-8 max-w-4xl">
-            {/* Top Navigation Bar */}
-            <Button 
-              variant="ghost" 
-              onClick={handleClose}
-              className="mb-6 -ml-2 text-muted-foreground hover:text-foreground"
-            >
-              <svg className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-              Back to Library
-            </Button>
-
-            {/* Header */}
-            <div className="flex items-start gap-4 mb-8">
+          <div className="container mx-auto px-4 py-8">
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-card border rounded-lg shadow-lg p-6">
+                {/* Header */}
+                <div className="flex items-start gap-4 mb-6">
                   <div className="p-3 bg-dc-surface-elevated rounded-lg flex-shrink-0">
                     <IconComponent className="h-6 w-6 text-primary" />
                   </div>
@@ -318,7 +308,7 @@ const PromptDetailPage = ({ useCase }: PromptDetailPageProps) => {
                 </div>
 
                 {/* Content */}
-                <div className="space-y-8 mb-8">
+                <div className="space-y-6">
                   <div>
                     <h3 className="text-lg font-semibold mb-2">Description</h3>
                     <p className="text-base text-muted-foreground leading-relaxed break-words">{useCase.description}</p>
@@ -339,7 +329,7 @@ const PromptDetailPage = ({ useCase }: PromptDetailPageProps) => {
 
                   <div>
                     <h3 className="text-lg font-semibold mb-4">Complete Prompt</h3>
-                    <div className="p-6 bg-dc-surface-elevated rounded-lg border max-h-96 overflow-y-auto">
+                    <div className="p-4 bg-dc-surface-elevated rounded-lg border max-h-80 overflow-y-auto">
                       <pre className="text-sm text-foreground whitespace-pre-wrap font-mono leading-relaxed">
                         {useCase.prompt}
                       </pre>
@@ -347,35 +337,39 @@ const PromptDetailPage = ({ useCase }: PromptDetailPageProps) => {
                   </div>
                 </div>
 
-                {/* CTA Actions - Sticky at bottom on mobile, inline on desktop */}
-                <div className="sticky bottom-0 bg-background/95 backdrop-blur-sm border-t pt-6 -mx-4 px-4 sm:mx-0 sm:px-0 sm:static sm:bg-transparent sm:backdrop-blur-none sm:border-t-0">
-                  <div className="flex flex-col sm:flex-row justify-end gap-3">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="outline"
-                          onClick={handleShare}
-                          aria-label="Share this prompt"
-                          className="flex items-center gap-2"
-                        >
-                          <Share2 className="h-4 w-4" />
-                          <span>{copiedLink ? 'Copied' : 'Share'}</span>
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>Copy link to share</TooltipContent>
-                    </Tooltip>
+                {/* Actions */}
+                <div className="flex flex-col sm:flex-row justify-end gap-3 mt-6 pt-6 border-t">
+                  <Button variant="outline" onClick={handleClose}>
+                    Close
+                  </Button>
 
-                    <Button 
-                      className="dc-button-primary flex items-center gap-2"
-                      onClick={handleUsePrompt}
-                    >
-                      <Rocket className="h-4 w-4" />
-                      <span>Use Prompt</span>
-                    </Button>
-                  </div>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="outline"
+                        onClick={handleShare}
+                        aria-label="Share this prompt"
+                        className="flex items-center gap-2"
+                      >
+                        <Share2 className="h-4 w-4" />
+                        <span>{copiedLink ? 'Copied' : 'Share'}</span>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Copy link to share</TooltipContent>
+                  </Tooltip>
+
+                  <Button 
+                    className="dc-button-primary flex items-center gap-2"
+                    onClick={handleUsePrompt}
+                  >
+                    <Rocket className="h-4 w-4" />
+                    <span>Use Prompt</span>
+                  </Button>
                 </div>
+              </div>
             </div>
           </div>
+        </div>
 
         <UsePromptWizard
           isOpen={showWizard}
