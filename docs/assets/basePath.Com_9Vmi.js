@@ -1,1 +1,0 @@
-function a(){return typeof window<"u"&&window.__BASE_PATH__?window.__BASE_PATH__:typeof window<"u"&&window.location.pathname.startsWith("/main-web-astro/")?"/main-web-astro/":"/"}function o(n){const t=a().replace(/\/$/,""),e=n.startsWith("/")?n:`/${n}`;return`${t}${e}`}export{o as g};
