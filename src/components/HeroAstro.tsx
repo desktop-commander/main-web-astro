@@ -9,13 +9,15 @@ import { getAssetPath } from "@/utils/assets";
 // Astro-compatible Hero (no useAnalytics dependency)
 const HeroAstro = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [npmCount, setNpmCount] = useState(0);
-  const [githubStars, setGithubStars] = useState(0);
   const [mediaLoaded, setMediaLoaded] = useState(false);
   const [mediaError, setMediaError] = useState(false);
   const [useVideo, setUseVideo] = useState(true);
   const heroRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Static values for badges (no animations)
+  const npmCount = 24;
+  const githubStars = 44;
 
   // Media loading - only runs on client
   useEffect(() => {
@@ -70,44 +72,6 @@ const HeroAstro = () => {
       return () => clearInterval(restartInterval);
     }
   }, [mediaLoaded, useVideo]);
-
-  // Counter animations
-  useEffect(() => {
-    if (isVisible) {
-      const npmTarget = 24;
-      const npmDuration = 3500;
-      const npmIncrement = npmTarget / (npmDuration / 16);
-      
-      let npmCurrent = 0;
-      const npmTimer = setInterval(() => {
-        npmCurrent += npmIncrement;
-        if (npmCurrent >= npmTarget) {
-          npmCurrent = npmTarget;
-          clearInterval(npmTimer);
-        }
-        setNpmCount(Math.floor(npmCurrent));
-      }, 16);
-
-      const githubTarget = 44;
-      const githubDuration = 4000;
-      const githubIncrement = githubTarget / (githubDuration / 16);
-      
-      let githubCurrent = 0;
-      const githubTimer = setInterval(() => {
-        githubCurrent += githubIncrement;
-        if (githubCurrent >= githubTarget) {
-          githubCurrent = githubTarget;
-          clearInterval(githubTimer);
-        }
-        setGithubStars(Math.floor(githubCurrent));
-      }, 16);
-
-      return () => {
-        clearInterval(npmTimer);
-        clearInterval(githubTimer);
-      };
-    }
-  }, [isVisible]);
 
   return (
     <section ref={heroRef} className="pt-32 pb-16 md:pt-48 md:pb-24">
